@@ -1,5 +1,6 @@
-const request = require("request")
 const yargs = require("yargs")
+const geocode = require("./geocode")
+const weather = require("./weather")
 const argv = yargs.options({
     a: {
         demand: true,
@@ -9,14 +10,14 @@ const argv = yargs.options({
     }
 }).help().alias("help", "h").argv
 
-let address=encodeURIComponent(argv.a)
+geocode.geocodeAddress(argv.a, (errorMessage, response) => {
+    if (errorMessage)
+        console.log(errorMessage)
+    else {
+        console.log(response)
+        weather.getTemp(response.lat, response.lng, (message) => {
+            console.log(message)
 
-request({
-    url: `http://maps.googleapis.com/maps/api/geocode/json?address=${address}`,
-    json: true //Will convert the json data to javascript object
-}, (error, response, body) => {
-    if (!error) {
-        //console.log(JSON.stringify(body, undefined, 2))
-        console.log(body.results[0].geometry.location)
+        })
     }
 })
