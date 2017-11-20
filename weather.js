@@ -9,8 +9,10 @@ let getTemp=(lat,lng,callback)=>{
         (error,response,body)=>{
             if(error)
                 callback('Some error occured')
-            else
+            else {
+                //console.log(JSON.stringify(body, undefined, 2))
                 console.log(body.currently.temperature)
+            }
         })
 
 }
